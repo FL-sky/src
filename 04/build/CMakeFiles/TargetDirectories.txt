@@ -1,0 +1,4 @@
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/04/build/CMakeFiles/edit_cache.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/04/build/CMakeFiles/rebuild_cache.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/04/build/CMakeFiles/echocli.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/04/build/CMakeFiles/echosrv_poll.dir
