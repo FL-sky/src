@@ -1,4 +1,4 @@
-# Install script for directory: /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/jmuduo/muduo/base
+# Install script for directory: /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/jmuduo/muduo/base/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,23 +35,5 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/lib/libmuduo_base.a")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/muduo/base" TYPE FILE FILES
-    "/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/jmuduo/muduo/base/Timestamp.h"
-    "/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/jmuduo/muduo/base/Types.h"
-    "/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/jmuduo/muduo/base/copyable.h"
-    )
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/cmake_install.cmake")
-
 endif()
 

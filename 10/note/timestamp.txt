@@ -1,0 +1,8 @@
+Timestamp类封装
+    <baseltypes.h>
+    less_than_comparable
+        要求实现<，可自动实现>,<=,>=
+
+    BOOST _STATIC_ASSERT
+    使用PRId64
+    Timestamp实现及测试

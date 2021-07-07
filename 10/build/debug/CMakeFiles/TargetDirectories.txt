@@ -11,6 +11,13 @@
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/CMakeFiles/rebuild_cache.dir
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/CMakeFiles/edit_cache.dir
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/CMakeFiles/muduo_base.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/install/strip.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/install/local.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/install.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/list_install_components.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/rebuild_cache.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/edit_cache.dir
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/timestamp_unittest.dir
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/tests/CMakeFiles/install/strip.dir
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/tests/CMakeFiles/install/local.dir
 /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/tests/CMakeFiles/install.dir

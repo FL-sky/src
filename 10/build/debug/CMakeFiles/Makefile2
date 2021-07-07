@@ -75,18 +75,38 @@ clean: tests/clean
 
 # Recursive "all" directory target.
 muduo/base/all: muduo/base/CMakeFiles/muduo_base.dir/all
+muduo/base/all: muduo/base/tests/all
 
 .PHONY : muduo/base/all
 
 # Recursive "preinstall" directory target.
-muduo/base/preinstall:
+muduo/base/preinstall: muduo/base/tests/preinstall
 
 .PHONY : muduo/base/preinstall
 
 # Recursive "clean" directory target.
 muduo/base/clean: muduo/base/CMakeFiles/muduo_base.dir/clean
+muduo/base/clean: muduo/base/tests/clean
 
 .PHONY : muduo/base/clean
+
+#=============================================================================
+# Directory level rules for directory muduo/base/tests
+
+# Recursive "all" directory target.
+muduo/base/tests/all: muduo/base/tests/CMakeFiles/timestamp_unittest.dir/all
+
+.PHONY : muduo/base/tests/all
+
+# Recursive "preinstall" directory target.
+muduo/base/tests/preinstall:
+
+.PHONY : muduo/base/tests/preinstall
+
+# Recursive "clean" directory target.
+muduo/base/tests/clean: muduo/base/tests/CMakeFiles/timestamp_unittest.dir/clean
+
+.PHONY : muduo/base/tests/clean
 
 #=============================================================================
 # Directory level rules for directory tests
@@ -132,6 +152,33 @@ muduo_base: muduo/base/CMakeFiles/muduo_base.dir/rule
 muduo/base/CMakeFiles/muduo_base.dir/clean:
 	$(MAKE) -f muduo/base/CMakeFiles/muduo_base.dir/build.make muduo/base/CMakeFiles/muduo_base.dir/clean
 .PHONY : muduo/base/CMakeFiles/muduo_base.dir/clean
+
+#=============================================================================
+# Target rules for target muduo/base/tests/CMakeFiles/timestamp_unittest.dir
+
+# All Build rule for target.
+muduo/base/tests/CMakeFiles/timestamp_unittest.dir/all: muduo/base/CMakeFiles/muduo_base.dir/all
+	$(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/depend
+	$(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles --progress-num=5,6 "Built target timestamp_unittest"
+.PHONY : muduo/base/tests/CMakeFiles/timestamp_unittest.dir/all
+
+# Build rule for subdir invocation for target.
+muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/CMakeFiles/timestamp_unittest.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles 0
+.PHONY : muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule
+
+# Convenience name for target.
+timestamp_unittest: muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule
+
+.PHONY : timestamp_unittest
+
+# clean rule for target.
+muduo/base/tests/CMakeFiles/timestamp_unittest.dir/clean:
+	$(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/clean
+.PHONY : muduo/base/tests/CMakeFiles/timestamp_unittest.dir/clean
 
 #=============================================================================
 # Target rules for target tests/CMakeFiles/bsa.dir

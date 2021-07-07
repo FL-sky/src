@@ -126,14 +126,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(CMAKE_COMMAND) -E cmake_progress_start /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/muduo/base/tests/CMakeFiles/progress.marks
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/clean
 .PHONY : clean
 
 # The main clean target
@@ -143,57 +143,60 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named muduo_base
+# Convenience name for target.
+muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule:
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f CMakeFiles/Makefile2 muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule
+.PHONY : muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule
 
-# Build rule for target.
-muduo_base: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 muduo_base
-.PHONY : muduo_base
+# Convenience name for target.
+timestamp_unittest: muduo/base/tests/CMakeFiles/timestamp_unittest.dir/rule
 
-# fast build rule for target.
-muduo_base/fast:
-	$(MAKE) -f muduo/base/CMakeFiles/muduo_base.dir/build.make muduo/base/CMakeFiles/muduo_base.dir/build
-.PHONY : muduo_base/fast
-
-#=============================================================================
-# Target rules for targets named timestamp_unittest
-
-# Build rule for target.
-timestamp_unittest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 timestamp_unittest
 .PHONY : timestamp_unittest
 
 # fast build rule for target.
 timestamp_unittest/fast:
-	$(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build
 .PHONY : timestamp_unittest/fast
 
-#=============================================================================
-# Target rules for targets named bsa
+Timestamp_unittest.o: Timestamp_unittest.cc.o
 
-# Build rule for target.
-bsa: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 bsa
-.PHONY : bsa
+.PHONY : Timestamp_unittest.o
 
-# fast build rule for target.
-bsa/fast:
-	$(MAKE) -f tests/CMakeFiles/bsa.dir/build.make tests/CMakeFiles/bsa.dir/build
-.PHONY : bsa/fast
+# target to build an object file
+Timestamp_unittest.cc.o:
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/Timestamp_unittest.cc.o
+.PHONY : Timestamp_unittest.cc.o
+
+Timestamp_unittest.i: Timestamp_unittest.cc.i
+
+.PHONY : Timestamp_unittest.i
+
+# target to preprocess a source file
+Timestamp_unittest.cc.i:
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/Timestamp_unittest.cc.i
+.PHONY : Timestamp_unittest.cc.i
+
+Timestamp_unittest.s: Timestamp_unittest.cc.s
+
+.PHONY : Timestamp_unittest.s
+
+# target to generate assembly for a file
+Timestamp_unittest.cc.s:
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(MAKE) -f muduo/base/tests/CMakeFiles/timestamp_unittest.dir/build.make muduo/base/tests/CMakeFiles/timestamp_unittest.dir/Timestamp_unittest.cc.s
+.PHONY : Timestamp_unittest.cc.s
 
 # Help Target
 help:
@@ -207,9 +210,10 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... muduo_base"
 	@echo "... timestamp_unittest"
-	@echo "... bsa"
+	@echo "... Timestamp_unittest.o"
+	@echo "... Timestamp_unittest.i"
+	@echo "... Timestamp_unittest.s"
 .PHONY : help
 
 
@@ -221,6 +225,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/fx/softDocument/vscode/cpp/muduo_server_learn/src/10/build/debug && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
