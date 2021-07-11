@@ -20,47 +20,47 @@
 
 namespace muduo
 {
-namespace CurrentThread
-{
-  // __thread修饰的变量是线程局部存储的。
-  __thread int t_cachedTid = 0;		// 线程真实pid（tid）的缓存，
-									// 是为了减少::syscall(SYS_gettid)系统调用的次数
-									// 提高获取tid的效率
-  __thread char t_tidString[32];	// 这是tid的字符串表示形式
-  __thread const char* t_threadName = "unknown";
-  const bool sameType = boost::is_same<int, pid_t>::value;
-  BOOST_STATIC_ASSERT(sameType);
-}
-
-namespace detail
-{
-
-pid_t gettid()
-{
-  return static_cast<pid_t>(::syscall(SYS_gettid));
-}
-
-void afterFork()
-{
-  muduo::CurrentThread::t_cachedTid = 0;
-  muduo::CurrentThread::t_threadName = "main";
-  CurrentThread::tid();
-  // no need to call pthread_atfork(NULL, NULL, &afterFork);
-}
-
-class ThreadNameInitializer
-{
- public:
-  ThreadNameInitializer()
+  namespace CurrentThread
   {
-    muduo::CurrentThread::t_threadName = "main";
-    CurrentThread::tid();
-    pthread_atfork(NULL, NULL, &afterFork);
+    // __thread修饰的变量是线程局部存储的。
+    __thread int t_cachedTid = 0;  // 线程真实pid（tid）的缓存，
+                                   // 是为了减少::syscall(SYS_gettid)系统调用的次数
+                                   // 提高获取tid的效率
+    __thread char t_tidString[32]; // 这是tid的字符串表示形式
+    __thread const char *t_threadName = "unknown";
+    const bool sameType = boost::is_same<int, pid_t>::value;
+    BOOST_STATIC_ASSERT(sameType);
   }
-};
 
-ThreadNameInitializer init;
-}
+  namespace detail
+  {
+
+    pid_t gettid()
+    {
+      return static_cast<pid_t>(::syscall(SYS_gettid));
+    }
+
+    void afterFork()
+    {
+      muduo::CurrentThread::t_cachedTid = 0;
+      muduo::CurrentThread::t_threadName = "main";
+      CurrentThread::tid();
+      // no need to call pthread_atfork(NULL, NULL, &afterFork);
+    }
+
+    class ThreadNameInitializer
+    {
+    public:
+      ThreadNameInitializer()
+      {
+        muduo::CurrentThread::t_threadName = "main";
+        CurrentThread::tid();
+        pthread_atfork(NULL, NULL, &afterFork);
+      }
+    };
+
+    ThreadNameInitializer init;
+  }
 }
 
 using namespace muduo;
@@ -71,7 +71,9 @@ void CurrentThread::cacheTid()
   {
     t_cachedTid = detail::gettid();
     int n = snprintf(t_tidString, sizeof t_tidString, "%5d ", t_cachedTid);
-    assert(n == 6); (void) n;
+    assert(n == 6);
+    (void)n; /// debug版本中assert生效，release版本中assert不生效
+    // 所以添加语句 (void) n; 表示用到了变量n
   }
 }
 
@@ -82,12 +84,12 @@ bool CurrentThread::isMainThread()
 
 AtomicInt32 Thread::numCreated_;
 
-Thread::Thread(const ThreadFunc& func, const string& n)
-  : started_(false),
-    pthreadId_(0),
-    tid_(0),
-    func_(func),
-    name_(n)
+Thread::Thread(const ThreadFunc &func, const string &n)
+    : started_(false),
+      pthreadId_(0),
+      tid_(0),
+      func_(func),
+      name_(n)
 {
   numCreated_.increment();
 }
@@ -114,9 +116,9 @@ int Thread::join()
   return pthread_join(pthreadId_, NULL);
 }
 
-void* Thread::startThread(void* obj)
+void *Thread::startThread(void *obj)
 {
-  Thread* thread = static_cast<Thread*>(obj);
+  Thread *thread = static_cast<Thread *>(obj);
   thread->runInThread();
   return NULL;
 }
@@ -130,7 +132,7 @@ void Thread::runInThread()
     func_();
     muduo::CurrentThread::t_threadName = "finished";
   }
-  catch (const Exception& ex)
+  catch (const Exception &ex)
   {
     muduo::CurrentThread::t_threadName = "crashed";
     fprintf(stderr, "exception caught in Thread %s\n", name_.c_str());
@@ -138,7 +140,7 @@ void Thread::runInThread()
     fprintf(stderr, "stack trace: %s\n", ex.stackTrace());
     abort();
   }
-  catch (const std::exception& ex)
+  catch (const std::exception &ex)
   {
     muduo::CurrentThread::t_threadName = "crashed";
     fprintf(stderr, "exception caught in Thread %s\n", name_.c_str());
@@ -152,4 +154,3 @@ void Thread::runInThread()
     throw; // rethrow
   }
 }
-

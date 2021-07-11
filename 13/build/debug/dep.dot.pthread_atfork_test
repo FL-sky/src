@@ -1,0 +1,8 @@
+digraph "GG" {
+node [
+  fontsize = "12"
+];
+    "node28" [ label="pthread_atfork_test" shape="house"];
+    "node33" [ label="pthread" shape="ellipse"];
+    "node28" -> "node33" // pthread_atfork_test -> pthread
+}

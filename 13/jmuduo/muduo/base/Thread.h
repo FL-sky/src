@@ -16,36 +16,36 @@
 namespace muduo
 {
 
-class Thread : boost::noncopyable
-{
- public:
-  typedef boost::function<void ()> ThreadFunc;
+  class Thread : boost::noncopyable
+  {
+  public:
+    typedef boost::function<void()> ThreadFunc;
 
-  explicit Thread(const ThreadFunc&, const string& name = string());
-  ~Thread();
+    explicit Thread(const ThreadFunc &, const string &name = string());
+    ~Thread();
 
-  void start();
-  int join(); // return pthread_join()
+    void start();
+    int join(); // return pthread_join()
 
-  bool started() const { return started_; }
-  // pthread_t pthreadId() const { return pthreadId_; }
-  pid_t tid() const { return tid_; }
-  const string& name() const { return name_; }
+    bool started() const { return started_; }
+    // pthread_t pthreadId() const { return pthreadId_; }
+    pid_t tid() const { return tid_; }
+    const string &name() const { return name_; }
 
-  static int numCreated() { return numCreated_.get(); }
+    static int numCreated() { return numCreated_.get(); }
 
- private:
-  static void* startThread(void* thread);
-  void runInThread();
+  private:
+    static void *startThread(void *thread);
+    void runInThread();
 
-  bool       started_;
-  pthread_t  pthreadId_;
-  pid_t      tid_;
-  ThreadFunc func_;
-  string     name_;
+    bool started_;
+    pthread_t pthreadId_;
+    pid_t tid_;
+    ThreadFunc func_;
+    string name_;
 
-  static AtomicInt32 numCreated_;
-};
+    static AtomicInt32 numCreated_;
+  };
 
 }
 #endif

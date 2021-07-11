@@ -3,17 +3,16 @@
 #include <pthread.h>
 #include <unistd.h>
 
-
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void* doit(void* arg)
+void *doit(void *arg)
 {
-	printf("pid = %d begin doit ...\n",static_cast<int>(getpid()));
+	printf("pid = %d begin doit ...\n", static_cast<int>(getpid()));
 	pthread_mutex_lock(&mutex);
 	struct timespec ts = {2, 0};
 	nanosleep(&ts, NULL);
 	pthread_mutex_unlock(&mutex);
-	printf("pid = %d end doit ...\n",static_cast<int>(getpid()));
+	printf("pid = %d end doit ...\n", static_cast<int>(getpid()));
 
 	return NULL;
 }
@@ -41,7 +40,10 @@ int main(void)
 		doit(NULL);
 	}
 	pthread_join(tid, NULL);
-	printf("pid = %d Exiting main ...\n",static_cast<int>(getpid()));
+	printf("pid = %d Exiting main ...\n", static_cast<int>(getpid()));
 
 	return 0;
 }
+
+// int pthread_atfork(void (*prepare)(void),void(*parent)(void), void (*child)(void));
+// //调用fork时，内部创建子进程前在父进程中会调用prepare，内部创建子进程成功后，父进程会调用parent，子进程会调用child
