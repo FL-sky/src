@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/14/jmuduo/muduo/base/Atomic.h
+boost/noncopyable.hpp
+-
+stdint.h
+-
+
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/14/jmuduo/muduo/base/tests/Atomic_unittest.cc
+muduo/base/Atomic.h
+-
+assert.h
+-
+

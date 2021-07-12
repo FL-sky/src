@@ -11,17 +11,17 @@
 
 class Bench
 {
- public:
+public:
   Bench(int numThreads)
-    : latch_(numThreads),
-      threads_(numThreads)
+      : latch_(numThreads),
+        threads_(numThreads)
   {
     for (int i = 0; i < numThreads; ++i)
     {
       char name[32];
       snprintf(name, sizeof name, "work thread %d", i);
       threads_.push_back(new muduo::Thread(
-            boost::bind(&Bench::threadFunc, this), muduo::string(name)));
+          boost::bind(&Bench::threadFunc, this), muduo::string(name)));
     }
     for_each(threads_.begin(), threads_.end(), boost::bind(&muduo::Thread::start, _1));
   }
@@ -49,8 +49,7 @@ class Bench
     for_each(threads_.begin(), threads_.end(), boost::bind(&muduo::Thread::join, _1));
   }
 
- private:
-
+private:
   void threadFunc()
   {
     printf("tid=%d, %s started\n",
@@ -78,7 +77,7 @@ class Bench
            muduo::CurrentThread::tid(),
            muduo::CurrentThread::name());
     for (std::map<int, int>::iterator it = delays.begin();
-        it != delays.end(); ++it)
+         it != delays.end(); ++it)
     {
       printf("tid = %d, delay = %d, count = %d\n",
              muduo::CurrentThread::tid(),
@@ -91,7 +90,7 @@ class Bench
   boost::ptr_vector<muduo::Thread> threads_;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   int threads = argc > 1 ? atoi(argv[1]) : 1;
 

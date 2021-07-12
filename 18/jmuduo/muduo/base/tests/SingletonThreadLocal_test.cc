@@ -9,7 +9,7 @@
 
 class Test : boost::noncopyable
 {
- public:
+public:
   Test()
   {
     printf("tid=%d, constructing %p\n", muduo::CurrentThread::tid(), this);
@@ -20,24 +20,29 @@ class Test : boost::noncopyable
     printf("tid=%d, destructing %p %s\n", muduo::CurrentThread::tid(), this, name_.c_str());
   }
 
-  const std::string& name() const { return name_; }
-  void setName(const std::string& n) { name_ = n; }
+  const std::string &name() const { return name_; }
+  void setName(const std::string &n) { name_ = n; }
 
- private:
+private:
   std::string name_;
 };
 
-#define STL muduo::Singleton<muduo::ThreadLocal<Test> >::instance().value()
+#define STL muduo::Singleton<muduo::ThreadLocal<Test>>::instance().value()
+
+///muduo::Singleton<muduo::ThreadLocal<Test>>::instance() 这是一个单例
+///.value() 这是线程特定数据
 
 void print()
 {
+  puts("\n-------print BEGIN-----------");
   printf("tid=%d, %p name=%s\n",
          muduo::CurrentThread::tid(),
          &STL,
          STL.name().c_str());
+  puts("-------print END-----------\n");
 }
 
-void threadFunc(const char* changeTo)
+void threadFunc(const char *changeTo)
 {
   print();
   STL.setName(changeTo);

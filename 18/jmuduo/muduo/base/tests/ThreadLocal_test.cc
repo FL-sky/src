@@ -7,7 +7,7 @@
 
 class Test : boost::noncopyable
 {
- public:
+public:
   Test()
   {
     printf("tid=%d, constructing %p\n", muduo::CurrentThread::tid(), this);
@@ -18,10 +18,10 @@ class Test : boost::noncopyable
     printf("tid=%d, destructing %p %s\n", muduo::CurrentThread::tid(), this, name_.c_str());
   }
 
-  const std::string& name() const { return name_; }
-  void setName(const std::string& n) { name_ = n; }
+  const std::string &name() const { return name_; }
+  void setName(const std::string &n) { name_ = n; }
 
- private:
+private:
   std::string name_;
 };
 
@@ -30,14 +30,20 @@ muduo::ThreadLocal<Test> testObj2;
 
 void print()
 {
+  puts("\n-------print BEGIN-----------");
   printf("tid=%d, obj1 %p name=%s\n",
          muduo::CurrentThread::tid(),
-	 &testObj1.value(),
+         &testObj1.value(),
          testObj1.value().name().c_str());
   printf("tid=%d, obj2 %p name=%s\n",
          muduo::CurrentThread::tid(),
-	 &testObj2.value(),
+         &testObj2.value(),
          testObj2.value().name().c_str());
+  puts("-------print END-----------\n");
+  /*
+         %p:表示按十六进制输出数据，如果输出数据不够8位数，则左边补零
+
+         */
 }
 
 void threadFunc()
@@ -59,4 +65,7 @@ int main()
   print();
 
   pthread_exit(0);
+  /*
+  线程通过调用pthread_exit函数终止执行，就如同进程在结束时调用exit函数一样。这个函数的作用是，终止调用它的线程并返回一个指向某个对象的指针。
+  */
 }

@@ -9,47 +9,52 @@
 
 class Test
 {
- public:
+public:
   Test(int numThreads)
-    : latch_(numThreads),
-      threads_(numThreads)
+      : latch_(numThreads),
+        threads_(numThreads)
   {
+    printf("Test\tBegin\n");
     for (int i = 0; i < numThreads; ++i)
     {
       char name[32];
-      snprintf(name, sizeof name, "work thread %d", i);
+      snprintf(name, sizeof name, "work-thread-%d", i);
       threads_.push_back(new muduo::Thread(
-            boost::bind(&Test::threadFunc, this), muduo::string(name)));
+          boost::bind(&Test::threadFunc, this), muduo::string(name)));
     }
     for_each(threads_.begin(), threads_.end(), boost::bind(&muduo::Thread::start, _1));
+    printf("Test\tEnd\n");
   }
 
   void run(int times)
   {
+    printf("run\tBegin\n");
     printf("waiting for count down latch\n");
     latch_.wait();
     printf("all threads started\n");
     for (int i = 0; i < times; ++i)
     {
       char buf[32];
-      snprintf(buf, sizeof buf, "hello %d", i);
+      snprintf(buf, sizeof buf, "Item-%02d", i);
       queue_.put(buf);
       printf("tid=%d, put data = %s, size = %zd\n", muduo::CurrentThread::tid(), buf, queue_.size());
     }
+    printf("run\tEnd\n");
   }
 
   void joinAll()
   {
+    printf("joinAll\tBegin\n");
     for (size_t i = 0; i < threads_.size(); ++i)
     {
       queue_.put("stop");
     }
 
     for_each(threads_.begin(), threads_.end(), boost::bind(&muduo::Thread::join, _1));
+    printf("joinAll\tEnd\n");
   }
 
- private:
-
+private:
   void threadFunc()
   {
     printf("tid=%d, %s started\n",

@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/fx/softDocument/vscode/cpp/muduo_server_learn/src/18/jmuduo/tests/Pthread_atfork_test.cc
+stdio.h
+-
+time.h
+-
+pthread.h
+-
+unistd.h
+-
+

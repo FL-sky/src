@@ -10,17 +10,17 @@ using namespace muduo;
 
 class Test
 {
- public:
+public:
   Test(int numThreads)
-    : latch_(1),
-      threads_(numThreads)
+      : latch_(1),
+        threads_(numThreads)
   {
     for (int i = 0; i < numThreads; ++i)
     {
       char name[32];
       snprintf(name, sizeof name, "work thread %d", i);
       threads_.push_back(new muduo::Thread(
-            boost::bind(&Test::threadFunc, this), muduo::string(name)));
+          boost::bind(&Test::threadFunc, this), muduo::string(name)));
     }
     for_each(threads_.begin(), threads_.end(), boost::bind(&Thread::start, _1));
   }
@@ -35,16 +35,13 @@ class Test
     for_each(threads_.begin(), threads_.end(), boost::bind(&Thread::join, _1));
   }
 
- private:
-
+private:
   void threadFunc()
   {
     latch_.wait();
     printf("tid=%d, %s started\n",
            CurrentThread::tid(),
            CurrentThread::name());
-
-    
 
     printf("tid=%d, %s stopped\n",
            CurrentThread::tid(),
@@ -55,7 +52,7 @@ class Test
   boost::ptr_vector<Thread> threads_;
 };
 
-int main()
+int xmain()
 {
   printf("pid=%d, tid=%d\n", ::getpid(), CurrentThread::tid());
   Test t(3);
@@ -65,6 +62,26 @@ int main()
   t.joinAll();
 
   printf("number of created threads %d\n", Thread::numCreated());
+
+  return 0;
 }
 
+#include <vector>
+void func(int x)
+{
+  printf("x=%d\n", x);
+}
 
+void func2(int x = 0)
+{
+  printf("hello\n");
+}
+
+int main()
+{
+  puts("----------------");
+  std::vector<int> v = {2, 3, 5, 7, 11};
+  for_each(v.begin(), v.end(), boost::bind(func, _1));
+  for_each(v.begin(), v.end(), func2); //func2至少要有1个形参
+  return 0;
+}
