@@ -1,6 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node20" [ label="boundedblockingqueue_test" shape="house"];
-}

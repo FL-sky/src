@@ -1,6 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node19" [ label="exception_test" shape="house"];
-}

@@ -1,6 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node20" [ label="mutex_test" shape="house"];
-}

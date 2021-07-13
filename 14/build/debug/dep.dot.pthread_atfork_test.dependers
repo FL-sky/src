@@ -1,6 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node29" [ label="pthread_atfork_test" shape="house"];
-}

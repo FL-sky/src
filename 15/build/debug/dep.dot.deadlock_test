@@ -1,8 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node34" [ label="deadlock_test" shape="house"];
-    "node39" [ label="pthread" shape="ellipse"];
-    "node34" -> "node39" // deadlock_test -> pthread
-}

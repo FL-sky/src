@@ -1,6 +1,0 @@
-digraph "GG" {
-node [
-  fontsize = "12"
-];
-    "node23" [ label="timestamp_unittest" shape="house"];
-}
