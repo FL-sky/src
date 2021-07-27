@@ -9,16 +9,16 @@
 using namespace muduo;
 using namespace muduo::net;
 
-void onHighWaterMark(const TcpConnectionPtr& conn, size_t len)
+void onHighWaterMark(const TcpConnectionPtr &conn, size_t len)
 {
   LOG_INFO << "HighWaterMark " << len;
 }
 
-const int kBufSize = 64*1024;
-const char* g_file = NULL;
+const int kBufSize = 64 * 1024;
+const char *g_file = NULL;
 typedef boost::shared_ptr<FILE> FilePtr;
 
-void onConnection(const TcpConnectionPtr& conn)
+void onConnection(const TcpConnectionPtr &conn)
 {
   LOG_INFO << "FileServer - " << conn->peerAddress().toIpPort() << " -> "
            << conn->localAddress().toIpPort() << " is "
@@ -27,12 +27,17 @@ void onConnection(const TcpConnectionPtr& conn)
   {
     LOG_INFO << "FileServer - Sending file " << g_file
              << " to " << conn->peerAddress().toIpPort();
-    conn->setHighWaterMarkCallback(onHighWaterMark, kBufSize+1);
+    conn->setHighWaterMarkCallback(onHighWaterMark, kBufSize + 1);
 
-    FILE* fp = ::fopen(g_file, "rb");
+    // FILE *fp = ::fopen(g_file, "rb");
+    FILE *fp = ::fopen(g_file, "r"); //文本文件不能用rb打开么
     if (fp)
     {
       FilePtr ctx(fp, ::fclose);
+      /*
+      FilePtr ctx(fp, ::fclose);
+表示ctx引用计数减为0时候，要销毁fp是通过fclose()来销毁的。
+      */
       conn->setContext(ctx);
       char buf[kBufSize];
       size_t nread = ::fread(buf, 1, sizeof buf, fp);
@@ -46,9 +51,9 @@ void onConnection(const TcpConnectionPtr& conn)
   }
 }
 
-void onWriteComplete(const TcpConnectionPtr& conn)
+void onWriteComplete(const TcpConnectionPtr &conn)
 {
-  const FilePtr& fp = boost::any_cast<const FilePtr&>(conn->getContext());
+  const FilePtr &fp = boost::any_cast<const FilePtr &>(conn->getContext());
   char buf[kBufSize];
   size_t nread = ::fread(buf, 1, sizeof buf, get_pointer(fp));
   if (nread > 0)
@@ -62,7 +67,7 @@ void onWriteComplete(const TcpConnectionPtr& conn)
   }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 1)
@@ -82,4 +87,3 @@ int main(int argc, char* argv[])
     fprintf(stderr, "Usage: %s file_for_downloading\n", argv[0]);
   }
 }
-

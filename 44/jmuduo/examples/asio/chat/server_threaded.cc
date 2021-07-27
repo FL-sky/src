@@ -15,12 +15,12 @@ using namespace muduo::net;
 
 class ChatServer : boost::noncopyable
 {
- public:
-  ChatServer(EventLoop* loop,
-             const InetAddress& listenAddr)
-  : loop_(loop),
-    server_(loop, listenAddr, "ChatServer"),
-    codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3))
+public:
+  ChatServer(EventLoop *loop,
+             const InetAddress &listenAddr)
+      : loop_(loop),
+        server_(loop, listenAddr, "ChatServer"),
+        codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3))
   {
     server_.setConnectionCallback(
         boost::bind(&ChatServer::onConnection, this, _1));
@@ -38,12 +38,12 @@ class ChatServer : boost::noncopyable
     server_.start();
   }
 
- private:
-  void onConnection(const TcpConnectionPtr& conn)
+private:
+  void onConnection(const TcpConnectionPtr &conn)
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
-        << conn->peerAddress().toIpPort() << " is "
-        << (conn->connected() ? "UP" : "DOWN");
+             << conn->peerAddress().toIpPort() << " is "
+             << (conn->connected() ? "UP" : "DOWN");
 
     // 有多个IO线程，因而这里的connections_需要用mutex保护
     MutexLockGuard lock(mutex_);
@@ -57,30 +57,38 @@ class ChatServer : boost::noncopyable
     }
   }
 
-  void onStringMessage(const TcpConnectionPtr&,
-                       const string& message,
+  void onStringMessage(const TcpConnectionPtr &,
+                       const string &message,
                        Timestamp)
   {
     // 有多个IO线程，因而这里的connections_需要用mutex保护
     MutexLockGuard lock(mutex_);
     // 转发消息给所有客户端
     for (ConnectionList::iterator it = connections_.begin();
-        it != connections_.end();
-        ++it)
+         it != connections_.end();
+         ++it)
     {
       codec_.send(get_pointer(*it), message);
     }
+    /*
+    由于mutex的存在,多线程并不能并发执行，而是串行的。
+    因而存在较高的锁竞争。效率比较低。
+    
+    C1向服务器端发送一条消息hello,服务器通过一个IO线程转发给所有客户端.与此同时C2向服务器端发送一条消息hel1o2，服务器端通过另一个IO线程
+转发给所有客户端，由于锁的存在，这两个线程并不能并发执行，而是串行的。这个时候，客户端数目比较大，第二条消息.hel1o到达客个客户端的延迟也比较大。
+
+    */
   }
 
   typedef std::set<TcpConnectionPtr> ConnectionList;
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpServer server_;
   LengthHeaderCodec codec_;
   MutexLock mutex_;
-  ConnectionList connections_;		// 连接列表
+  ConnectionList connections_; // 连接列表
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 1)
@@ -101,4 +109,3 @@ int main(int argc, char* argv[])
     printf("Usage: %s port [thread_num]\n", argv[0]);
   }
 }
-

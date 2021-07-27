@@ -1,1 +1,21 @@
 copy from others ,maybe a up from bilibili.com
+
+
+set -x
+==
+https://blog.csdn.net/kunkliu/article/details/78464650
+在liunx脚本中可用set -x就可有详细的日志输出.免的老是要echo了
+
+
+build.sh
+~~
+cmake --graphviz=dep.dot
+
+dot
+==
+https://blog.csdn.net/bitcarmanlee/article/details/78037251
+dot -Tpng -o test.png test.dot
+
+cmake -D CMAKE_BUILD_TYPE=
+https://zhidao.baidu.com/question/1384170882362808420.html
+

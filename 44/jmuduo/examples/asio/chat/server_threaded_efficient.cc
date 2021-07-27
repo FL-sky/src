@@ -16,13 +16,13 @@ using namespace muduo::net;
 
 class ChatServer : boost::noncopyable
 {
- public:
-  ChatServer(EventLoop* loop,
-             const InetAddress& listenAddr)
-  : loop_(loop),
-    server_(loop, listenAddr, "ChatServer"),
-    codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3)),
-    connections_(new ConnectionList)
+public:
+  ChatServer(EventLoop *loop,
+             const InetAddress &listenAddr)
+      : loop_(loop),
+        server_(loop, listenAddr, "ChatServer"),
+        codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3)),
+        connections_(new ConnectionList)
   {
     server_.setConnectionCallback(
         boost::bind(&ChatServer::onConnection, this, _1));
@@ -40,18 +40,18 @@ class ChatServer : boost::noncopyable
     server_.start();
   }
 
- private:
-  void onConnection(const TcpConnectionPtr& conn)
+private:
+  void onConnection(const TcpConnectionPtr &conn)
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
-        << conn->peerAddress().toIpPort() << " is "
-        << (conn->connected() ? "UP" : "DOWN");
+             << conn->peerAddress().toIpPort() << " is "
+             << (conn->connected() ? "UP" : "DOWN");
 
     MutexLockGuard lock(mutex_);
-    if (!connections_.unique())		// 说明引用计数大于2
+    if (!connections_.unique()) // 说明引用计数大于2
     {
       // new ConnectionList(*connections_)这段代码拷贝了一份ConnectionList
-      connections_.reset(new ConnectionList(*connections_));
+      connections_.reset(new ConnectionList(*connections_)); ///这里引用计数都变成1了吧
     }
     assert(connections_.unique());
 
@@ -69,8 +69,8 @@ class ChatServer : boost::noncopyable
   typedef std::set<TcpConnectionPtr> ConnectionList;
   typedef boost::shared_ptr<ConnectionList> ConnectionListPtr;
 
-  void onStringMessage(const TcpConnectionPtr&,
-                       const string& message,
+  void onStringMessage(const TcpConnectionPtr &,
+                       const string &message,
                        Timestamp)
   {
     // 引用计数加1，mutex保护的临界区大大缩短
@@ -78,11 +78,13 @@ class ChatServer : boost::noncopyable
     // 可能大家会有疑问，不受mutex保护，写者更改了连接列表怎么办？
     // 实际上，写者是在另一个复本上修改，所以无需担心。
     for (ConnectionList::iterator it = connections->begin();
-        it != connections->end();
-        ++it)
+         it != connections->end();
+         ++it)
     {
       codec_.send(get_pointer(*it), message);
     }
+
+    /// assert(!connections.unique()); 这个断言不一定成立
     // 当connections这个栈上的变量销毁的时候，引用计数减1
   }
 
@@ -92,14 +94,14 @@ class ChatServer : boost::noncopyable
     return connections_;
   }
 
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpServer server_;
   LengthHeaderCodec codec_;
   MutexLock mutex_;
   ConnectionListPtr connections_;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 1)
@@ -120,4 +122,3 @@ int main(int argc, char* argv[])
     printf("Usage: %s port [thread_num]\n", argv[0]);
   }
 }
-

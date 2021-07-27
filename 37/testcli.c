@@ -9,12 +9,12 @@
 #include <errno.h>
 #include <string.h>
 
-#define ERR_EXIT(m) \
-        do \
-        { \
-                perror(m); \
-                exit(EXIT_FAILURE); \
-        } while(0)
+#define ERR_EXIT(m)         \
+	do                      \
+	{                       \
+		perror(m);          \
+		exit(EXIT_FAILURE); \
+	} while (0)
 
 int main(void)
 {
@@ -28,14 +28,14 @@ int main(void)
 	servaddr.sin_port = htons(8888);
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-	if (connect(sock, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)
+	if (connect(sock, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
 		ERR_EXIT("connect");
 
-	char buf[1024] ={0};
+	char buf[1024] = {0};
 	while (1)
 	{
 		int ret = read(sock, buf, sizeof(buf));
-		printf("ret=%d\n", ret);
+		printf("ret=%d\n", ret); //有可能一次接收完300
 		if (ret == 0)
 			break;
 
@@ -46,6 +46,6 @@ int main(void)
 
 	sleep(10);
 	close(sock);
-	
+
 	return 0;
 }

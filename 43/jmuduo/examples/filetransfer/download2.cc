@@ -7,15 +7,15 @@
 using namespace muduo;
 using namespace muduo::net;
 
-void onHighWaterMark(const TcpConnectionPtr& conn, size_t len)
+void onHighWaterMark(const TcpConnectionPtr &conn, size_t len)
 {
   LOG_INFO << "HighWaterMark " << len;
 }
 
-const int kBufSize = 64*1024;
-const char* g_file = NULL;
+const int kBufSize = 64 * 1024;
+const char *g_file = NULL;
 
-void onConnection(const TcpConnectionPtr& conn)
+void onConnection(const TcpConnectionPtr &conn)
 {
   LOG_INFO << "FileServer - " << conn->peerAddress().toIpPort() << " -> "
            << conn->localAddress().toIpPort() << " is "
@@ -24,9 +24,9 @@ void onConnection(const TcpConnectionPtr& conn)
   {
     LOG_INFO << "FileServer - Sending file " << g_file
              << " to " << conn->peerAddress().toIpPort();
-    conn->setHighWaterMarkCallback(onHighWaterMark, kBufSize+1);
+    conn->setHighWaterMarkCallback(onHighWaterMark, kBufSize + 1);
 
-    FILE* fp = ::fopen(g_file, "rb");
+    FILE *fp = ::fopen(g_file, "rb");
     if (fp)
     {
       conn->setContext(fp);
@@ -44,7 +44,7 @@ void onConnection(const TcpConnectionPtr& conn)
   {
     if (!conn->getContext().empty())
     {
-      FILE* fp = boost::any_cast<FILE*>(conn->getContext());
+      FILE *fp = boost::any_cast<FILE *>(conn->getContext());
       if (fp)
       {
         ::fclose(fp);
@@ -53,9 +53,9 @@ void onConnection(const TcpConnectionPtr& conn)
   }
 }
 
-void onWriteComplete(const TcpConnectionPtr& conn)
+void onWriteComplete(const TcpConnectionPtr &conn)
 {
-  FILE* fp = boost::any_cast<FILE*>(conn->getContext());
+  FILE *fp = boost::any_cast<FILE *>(conn->getContext());
   char buf[kBufSize];
   size_t nread = ::fread(buf, 1, sizeof buf, fp);
   if (nread > 0)
@@ -69,10 +69,15 @@ void onWriteComplete(const TcpConnectionPtr& conn)
     conn->setContext(fp);
     conn->shutdown();
     LOG_INFO << "FileServer - done";
+    /*
+    conn->setContext(fp);
+将TcpConnection对象与fp绑定
+通过这种方法，我们就不需要额外再用一个map容器来管理对应关系。
+    */
   }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 1)
@@ -92,4 +97,3 @@ int main(int argc, char* argv[])
     fprintf(stderr, "Usage: %s file_for_downloading\n", argv[0]);
   }
 }
-

@@ -1,0 +1,13 @@
+数据从内核到用户空间，总是有一次拷贝的  除非把程序都写到kernel
+
+应用程序想关闭连接，但是有可能正处于发送数据的过程中，output Buffer中有数据还没发完
+不能直接调用close();
+
+conn->send(buff);
+conn->shutdown();
+
+POLLOUT事件
+
+关闭写的这一半
+
+连接状态更改为kDisconnecting,并没有关闭连接

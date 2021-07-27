@@ -16,11 +16,11 @@ using namespace muduo::net;
 
 class ChatClient : boost::noncopyable
 {
- public:
-  ChatClient(EventLoop* loop, const InetAddress& serverAddr)
-    : loop_(loop),
-      client_(loop, serverAddr, "ChatClient"),
-      codec_(boost::bind(&ChatClient::onStringMessage, this, _1, _2, _3))
+public:
+  ChatClient(EventLoop *loop, const InetAddress &serverAddr)
+      : loop_(loop),
+        client_(loop, serverAddr, "ChatClient"),
+        codec_(boost::bind(&ChatClient::onStringMessage, this, _1, _2, _3))
   {
     client_.setConnectionCallback(
         boost::bind(&ChatClient::onConnection, this, _1));
@@ -40,19 +40,19 @@ class ChatClient : boost::noncopyable
   }
 
   // 该函数在主线程中执行
-  void write(const StringPiece& message)
+  void write(const StringPiece &message)
   {
     // mutex用来保护connection_这个shared_ptr
     MutexLockGuard lock(mutex_);
     if (connection_)
     {
-      codec_.send(get_pointer(connection_), message);
+      codec_.send(get_pointer(connection_), message); ///line 65:connection_ = conn;
     }
   }
 
- private:
+private:
   // 该函数在IO线程中执行，IO线程与主线程不在同一个线程
-  void onConnection(const TcpConnectionPtr& conn)
+  void onConnection(const TcpConnectionPtr &conn)
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
              << conn->peerAddress().toIpPort() << " is "
@@ -62,7 +62,7 @@ class ChatClient : boost::noncopyable
     MutexLockGuard lock(mutex_);
     if (conn->connected())
     {
-      connection_ = conn;
+      connection_ = conn; /// line 49:codec_.send(get_pointer(connection_), message);
     }
     else
     {
@@ -70,21 +70,21 @@ class ChatClient : boost::noncopyable
     }
   }
 
-  void onStringMessage(const TcpConnectionPtr&,
-                       const string& message,
+  void onStringMessage(const TcpConnectionPtr &,
+                       const string &message,
                        Timestamp)
   {
     printf("<<< %s\n", message.c_str());
   }
 
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpClient client_;
   LengthHeaderCodec codec_;
   MutexLock mutex_;
   TcpConnectionPtr connection_;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 2)
@@ -107,4 +107,3 @@ int main(int argc, char* argv[])
     printf("Usage: %s host_ip port\n", argv[0]);
   }
 }
-

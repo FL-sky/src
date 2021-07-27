@@ -9,13 +9,13 @@
 using namespace muduo;
 using namespace muduo::net;
 
-ChargenServer::ChargenServer(EventLoop* loop,
-                             const InetAddress& listenAddr,
+ChargenServer::ChargenServer(EventLoop *loop,
+                             const InetAddress &listenAddr,
                              bool print)
-  : loop_(loop),
-    server_(loop, listenAddr, "ChargenServer"),
-    transferred_(0),
-    startTime_(Timestamp::now())
+    : loop_(loop),
+      server_(loop, listenAddr, "ChargenServer"),
+      transferred_(0),
+      startTime_(Timestamp::now())
 {
   server_.setConnectionCallback(
       boost::bind(&ChargenServer::onConnection, this, _1));
@@ -35,7 +35,7 @@ ChargenServer::ChargenServer(EventLoop* loop,
   }
   line += line;
 
-  for (size_t i = 0; i < 127-33; ++i)
+  for (size_t i = 0; i < 127 - 33; ++i)
   {
     message_ += line.substr(i, 72) + '\n';
   }
@@ -46,7 +46,7 @@ void ChargenServer::start()
   server_.start();
 }
 
-void ChargenServer::onConnection(const TcpConnectionPtr& conn)
+void ChargenServer::onConnection(const TcpConnectionPtr &conn)
 {
   LOG_INFO << "ChargenServer - " << conn->peerAddress().toIpPort() << " -> "
            << conn->localAddress().toIpPort() << " is "
@@ -58,8 +58,8 @@ void ChargenServer::onConnection(const TcpConnectionPtr& conn)
   }
 }
 
-void ChargenServer::onMessage(const TcpConnectionPtr& conn,
-                              Buffer* buf,
+void ChargenServer::onMessage(const TcpConnectionPtr &conn,
+                              Buffer *buf,
                               Timestamp time)
 {
   string msg(buf->retrieveAllAsString());
@@ -67,7 +67,7 @@ void ChargenServer::onMessage(const TcpConnectionPtr& conn,
            << " bytes received at " << time.toString();
 }
 
-void ChargenServer::onWriteComplete(const TcpConnectionPtr& conn)
+void ChargenServer::onWriteComplete(const TcpConnectionPtr &conn)
 {
   transferred_ += message_.size();
   conn->send(message_);
@@ -77,8 +77,7 @@ void ChargenServer::printThroughput()
 {
   Timestamp endTime = Timestamp::now();
   double time = timeDifference(endTime, startTime_);
-  printf("%4.3f MiB/s\n", static_cast<double>(transferred_)/time/1024/1024);
+  printf("%4.3f MiB/s\n", static_cast<double>(transferred_) / time / 1024 / 1024);
   transferred_ = 0;
   startTime_ = endTime;
 }
-

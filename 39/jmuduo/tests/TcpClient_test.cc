@@ -14,11 +14,11 @@ using namespace muduo::net;
 
 class TestClient
 {
- public:
-  TestClient(EventLoop* loop, const InetAddress& listenAddr)
-    : loop_(loop),
-      client_(loop, listenAddr, "TestClient"),
-      stdinChannel_(loop, 0)
+public:
+  TestClient(EventLoop *loop, const InetAddress &listenAddr)
+      : loop_(loop),
+        client_(loop, listenAddr, "TestClient"),
+        stdinChannel_(loop, 0)
   {
     client_.setConnectionCallback(
         boost::bind(&TestClient::onConnection, this, _1));
@@ -27,7 +27,7 @@ class TestClient
     //client_.enableRetry();
     // 标准输入缓冲区中有数据的时候，回调TestClient::handleRead
     stdinChannel_.setReadCallback(boost::bind(&TestClient::handleRead, this));
-	stdinChannel_.enableReading();
+    stdinChannel_.enableReading();
   }
 
   void connect()
@@ -35,8 +35,8 @@ class TestClient
     client_.connect();
   }
 
- private:
-  void onConnection(const TcpConnectionPtr& conn)
+private:
+  void onConnection(const TcpConnectionPtr &conn)
   {
     if (conn->connected())
     {
@@ -51,7 +51,7 @@ class TestClient
     }
   }
 
-  void onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp time)
+  void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time)
   {
     string msg(buf->retrieveAllAsString());
     printf("onMessage(): recv a message [%s]\n", msg.c_str());
@@ -63,16 +63,16 @@ class TestClient
   {
     char buf[1024] = {0};
     fgets(buf, 1024, stdin);
-	buf[strlen(buf)-1] = '\0';		// 去除\n
-	client_.connection()->send(buf);
+    buf[strlen(buf) - 1] = '\0'; // 去除\n
+    client_.connection()->send(buf);
   }
 
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpClient client_;
-  Channel stdinChannel_;		// 标准输入Channel
+  Channel stdinChannel_; // 标准输入Channel
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
   EventLoop loop;
@@ -80,5 +80,5 @@ int main(int argc, char* argv[])
   TestClient client(&loop, serverAddr);
   client.connect();
   loop.loop();
+  return 0;
 }
-

@@ -18,14 +18,14 @@ using namespace muduo::net;
 AtomicInt32 g_aliveConnections;
 AtomicInt32 g_disaliveConnections;
 int g_connections = 4;
-EventLoop* g_loop;
+EventLoop *g_loop;
 
 class RecvFileClient : boost::noncopyable
 {
- public:
-  RecvFileClient(EventLoop* loop, const InetAddress& serverAddr, const string& id)
-    : loop_(loop),
-      client_(loop, serverAddr, "RecvFileClient")
+public:
+  RecvFileClient(EventLoop *loop, const InetAddress &serverAddr, const string &id)
+      : loop_(loop),
+        client_(loop, serverAddr, "RecvFileClient")
   {
     client_.setConnectionCallback(
         boost::bind(&RecvFileClient::onConnection, this, _1));
@@ -46,8 +46,8 @@ class RecvFileClient : boost::noncopyable
     client_.connect();
   }
 
- private:
-  void onConnection(const TcpConnectionPtr& conn)
+private:
+  void onConnection(const TcpConnectionPtr &conn)
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
              << conn->peerAddress().toIpPort() << " is "
@@ -62,7 +62,7 @@ class RecvFileClient : boost::noncopyable
     else
     {
       connection_.reset();
-	  
+
       if (g_disaliveConnections.incrementAndGet() == g_connections)
       {
         LOG_INFO << "all disconnected";
@@ -72,19 +72,19 @@ class RecvFileClient : boost::noncopyable
     }
   }
 
-  void onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp time)
+  void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time)
   {
     fwrite(buf->peek(), 1, buf->readableBytes(), fp_);
-	buf->retrieveAll();
+    buf->retrieveAll();
   }
 
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpClient client_;
   TcpConnectionPtr connection_;
-  FILE* fp_;
+  FILE *fp_;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   EventLoop loop;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
   for (int i = 0; i < g_connections; ++i)
   {
     char buf[32];
-    snprintf(buf, sizeof buf, "%d", i+1);
+    snprintf(buf, sizeof buf, "%d", i + 1);
     clients.push_back(new RecvFileClient(loopPool.getNextLoop(), serverAddr, buf));
     clients[i].connect();
     usleep(200);
@@ -110,5 +110,3 @@ int main(int argc, char* argv[])
   loop.loop();
   usleep(20000);
 }
-
-

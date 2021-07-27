@@ -1,0 +1,33 @@
+
+=============server_basic===============
+reactor只有一个IO线程
+这个IO线程既负责listenfd也负责connfd
+
+
+=============server_multiloop============
+multi_reactor
+IO线程的数目
+EventLoopThreadPool IO线程池
+server_.setThreadNum(numThreads);
+
+
+EventLoopThreadPool::setThreadNum
+
+main reactor 负责listenfd accept
+sub reactor 负责 connfd
+
+roundbin 轮叫
+
+来一个连接，就选择下一个 EventLoop
+这样就让多个连接分配给若干个EventLoop来处理，而每个EventLoop属于一个IO线程
+也就意味着，多个连接分配给若干个IO线程来处理。
+
+================================
+sudoku求解服务器，既是IO密集型，又是计算密集型的一个服务
+
+IO线程池＋计算线程池
+
+计算时间如果比较久，就会使得IO线程阻塞，IO线程很快就用尽了，就不能处理大量的并发连接。
+
+一个IO线程＋计算线程池
+IO线程池＋计算线程池

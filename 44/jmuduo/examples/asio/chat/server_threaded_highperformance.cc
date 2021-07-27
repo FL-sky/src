@@ -17,12 +17,12 @@ using namespace muduo::net;
 
 class ChatServer : boost::noncopyable
 {
- public:
-  ChatServer(EventLoop* loop,
-             const InetAddress& listenAddr)
-  : loop_(loop),
-    server_(loop, listenAddr, "ChatServer"),
-    codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3))
+public:
+  ChatServer(EventLoop *loop,
+             const InetAddress &listenAddr)
+      : loop_(loop),
+        server_(loop, listenAddr, "ChatServer"),
+        codec_(boost::bind(&ChatServer::onStringMessage, this, _1, _2, _3))
   {
     server_.setConnectionCallback(
         boost::bind(&ChatServer::onConnection, this, _1));
@@ -41,8 +41,8 @@ class ChatServer : boost::noncopyable
     server_.start();
   }
 
- private:
-  void onConnection(const TcpConnectionPtr& conn)
+private:
+  void onConnection(const TcpConnectionPtr &conn)
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
              << conn->peerAddress().toIpPort() << " is "
@@ -58,8 +58,8 @@ class ChatServer : boost::noncopyable
     }
   }
 
-  void onStringMessage(const TcpConnectionPtr&,
-                       const string& message,
+  void onStringMessage(const TcpConnectionPtr &,
+                       const string &message,
                        Timestamp)
   {
     EventLoop::Functor f = boost::bind(&ChatServer::distributeMessage, this, message);
@@ -67,12 +67,12 @@ class ChatServer : boost::noncopyable
 
     MutexLockGuard lock(mutex_);
     // 转发消息给所有客户端，高效转发（多线程来转发）
-    for (std::set<EventLoop*>::iterator it = loops_.begin();
-        it != loops_.end();
-        ++it)
+    for (std::set<EventLoop *>::iterator it = loops_.begin();
+         it != loops_.end();
+         ++it)
     {
-      // 1、让对应的IO线程来执行distributeMessage
-	  // 2、distributeMessage不受mutex_保护
+      // 1、让对应的IO线程来执行distributeMessage /// 2、distributeMessage放到IO线程队列中执行，因此，这里的mutex_锁竞争大大减小
+      // 2、distributeMessage不受mutex_保护
       (*it)->queueInLoop(f);
     }
     LOG_DEBUG;
@@ -80,20 +80,20 @@ class ChatServer : boost::noncopyable
 
   typedef std::set<TcpConnectionPtr> ConnectionList;
 
-  void distributeMessage(const string& message)
+  void distributeMessage(const string &message)
   {
     LOG_DEBUG << "begin";
-    // connections_是thread local变量，所以不需要保护
+    // connections_ 是thread local变量，所以不需要保护
     for (ConnectionList::iterator it = connections_.instance().begin();
-        it != connections_.instance().end();
-        ++it)
+         it != connections_.instance().end();
+         ++it)
     {
       codec_.send(get_pointer(*it), message);
     }
     LOG_DEBUG << "end";
   }
 
-  void threadInit(EventLoop* loop)
+  void threadInit(EventLoop *loop)
   {
     assert(connections_.pointer() == NULL);
     connections_.instance();
@@ -102,17 +102,17 @@ class ChatServer : boost::noncopyable
     loops_.insert(loop);
   }
 
-  EventLoop* loop_;
+  EventLoop *loop_;
   TcpServer server_;
   LengthHeaderCodec codec_;
   // 线程局部单例变量，每个线程都有一个connections_实例
   ThreadLocalSingleton<ConnectionList> connections_;
 
   MutexLock mutex_;
-  std::set<EventLoop*> loops_;
+  std::set<EventLoop *> loops_;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   LOG_INFO << "pid = " << getpid();
   if (argc > 1)
@@ -133,5 +133,3 @@ int main(int argc, char* argv[])
     printf("Usage: %s port [thread_num]\n", argv[0]);
   }
 }
-
-
