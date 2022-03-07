@@ -30,7 +30,7 @@ int main(void)
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGCHLD, SIG_IGN);
 
-	int idlefd = open("/dev/null", O_RDONLY | O_CLOEXEC);
+	int idlefd = open("/dev/null", O_RDONLY | O_CLOEXEC); // 准备一个空闲的文件描述符
 	int listenfd;
 
 	//if ((listenfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
@@ -90,11 +90,11 @@ int main(void)
 
 			if (connfd == -1)
 			{
-				if (errno == EMFILE)
+				if (  == EMFILE)
 				{
 					close(idlefd);
 					idlefd = accept(listenfd, NULL, NULL);
-					close(idlefd);
+					close(idlefd); ///// 关了之后不影响吗
 					idlefd = open("/dev/null", O_RDONLY | O_CLOEXEC);
 					continue;
 				}

@@ -20,12 +20,12 @@
 
 typedef std::vector<struct epoll_event> EventList;
 
-#define ERR_EXIT(m) \
-        do \
-        { \
-                perror(m); \
-                exit(EXIT_FAILURE); \
-        } while(0)
+#define ERR_EXIT(m)         \
+	do                      \
+	{                       \
+		perror(m);          \
+		exit(EXIT_FAILURE); \
+	} while (0)
 
 int main(void)
 {
@@ -48,7 +48,7 @@ int main(void)
 	if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
 		ERR_EXIT("setsockopt");
 
-	if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)
+	if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
 		ERR_EXIT("bind");
 	if (listen(listenfd, SOMAXCONN) < 0)
 		ERR_EXIT("listen");
@@ -59,9 +59,9 @@ int main(void)
 
 	struct epoll_event event;
 	event.data.fd = listenfd;
-	event.events = EPOLLIN/* | EPOLLET*/;
+	event.events = EPOLLIN /* | EPOLLET*/; //默认LET
 	epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event);
-	
+
 	EventList events(16);
 	struct sockaddr_in peeraddr;
 	socklen_t peerlen;
@@ -70,27 +70,27 @@ int main(void)
 	int nready;
 	while (1)
 	{
-		nready = epoll_wait(epollfd, &*events.begin(), static_cast<int>(events.size()), -1);
+		nready = epoll_wait(epollfd, &*events.begin(), static_cast<int>(events.size()), -1); //&*events.begin() 这是一个输出参数
 		if (nready == -1)
 		{
 			if (errno == EINTR)
 				continue;
-			
+
 			ERR_EXIT("epoll_wait");
 		}
-		if (nready == 0)	// nothing happended
+		if (nready == 0) // nothing happended
 			continue;
 
 		if ((size_t)nready == events.size())
-			events.resize(events.size()*2);
+			events.resize(events.size() * 2);
 
 		for (int i = 0; i < nready; ++i)
 		{
 			if (events[i].data.fd == listenfd)
 			{
 				peerlen = sizeof(peeraddr);
-				connfd = ::accept4(listenfd, (struct sockaddr*)&peeraddr,
-						&peerlen, SOCK_NONBLOCK | SOCK_CLOEXEC);
+				connfd = ::accept4(listenfd, (struct sockaddr *)&peeraddr,
+								   &peerlen, SOCK_NONBLOCK | SOCK_CLOEXEC);
 
 				if (connfd == -1)
 				{
@@ -106,14 +106,12 @@ int main(void)
 						ERR_EXIT("accept4");
 				}
 
-
-				std::cout<<"ip="<<inet_ntoa(peeraddr.sin_addr)<<
-					" port="<<ntohs(peeraddr.sin_port)<<std::endl;
+				std::cout << "ip=" << inet_ntoa(peeraddr.sin_addr) << " port=" << ntohs(peeraddr.sin_port) << std::endl;
 
 				clients.push_back(connfd);
-				
+
 				event.data.fd = connfd;
-				event.events = EPOLLIN/* | EPOLLET*/;
+				event.events = EPOLLIN /* | EPOLLET*/;
 				epoll_ctl(epollfd, EPOLL_CTL_ADD, connfd, &event);
 			}
 			else if (events[i].events & EPOLLIN)
@@ -128,7 +126,7 @@ int main(void)
 					ERR_EXIT("read");
 				if (ret == 0)
 				{
-					std::cout<<"client close"<<std::endl;
+					std::cout << "client close" << std::endl;
 					close(connfd);
 					event = events[i];
 					epoll_ctl(epollfd, EPOLL_CTL_DEL, connfd, &event);
@@ -136,10 +134,9 @@ int main(void)
 					continue;
 				}
 
-				std::cout<<buf;
+				std::cout << buf;
 				write(connfd, buf, strlen(buf));
 			}
-
 		}
 	}
 
