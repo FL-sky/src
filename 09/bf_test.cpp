@@ -15,7 +15,7 @@ public:
 int main()
 {
 	Foo foo;
-	boost::function<void(int, int)> fp = boost::bind(&Foo::memberFunc, &foo, 0.5, _1, _2); ///指针
+	boost::function<void(int, int)> fp = boost::bind(&Foo::memberFunc, &foo, 0.5, _2, _1); ///指针
 	fp(100, 200);
 	boost::function<void(int, int)> fp2 = boost::bind(&Foo::memberFunc, boost::ref(foo), 0.5, _1, _2); ////引用
 	fp2(55, 66);
