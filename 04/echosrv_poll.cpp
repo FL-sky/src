@@ -33,7 +33,7 @@ int main(void)
 	int idlefd = open("/dev/null", O_RDONLY | O_CLOEXEC); // 准备一个空闲的文件描述符
 	int listenfd;
 
-	//if ((listenfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+	// if ((listenfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	if ((listenfd = socket(PF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP)) < 0)
 		ERR_EXIT("socket");
 
@@ -90,7 +90,8 @@ int main(void)
 
 			if (connfd == -1)
 			{
-				if (  == EMFILE)
+				if (errno == EMFILE)
+				///在官网中查找到返回值为24对应的错误信息为EMFILE，对应的描述信息为EMFILE Too many open files 24，对应的中文翻译就是打开的文件太多.
 				{
 					close(idlefd);
 					idlefd = accept(listenfd, NULL, NULL);
@@ -114,8 +115,8 @@ int main(void)
 				continue;
 		}
 
-		//std::cout<<pollfds.size()<<std::endl;
-		//std::cout<<nready<<std::endl;
+		// std::cout<<pollfds.size()<<std::endl;
+		// std::cout<<nready<<std::endl;
 		for (PollFdList::iterator it = pollfds.begin() + 1;
 			 it != pollfds.end() && nready > 0; ++it)
 		{
